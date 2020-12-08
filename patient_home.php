@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<div class="container"><h3>NOM Prenom</h3></div>
+<div class="container"><h3>M/Mme. NOM Prenom</h3></div>
 <div id="exTab1" class="container">	
     <ul class="nav nav-pills">
         <li class="active"><a  href="#1a" data-toggle="tab">Vos informations personnelle</a>
@@ -21,16 +21,63 @@
     </ul>
     <div class="tab-content clearfix">
         <div class="tab-pane active" id="1a">
-            <h3>info perso</h3>
-            <div>pdsnfjgdfb</div>
-            <br>
-            <div>pdsnfjgdfb</div>
+            <h7>info perso</h7>
+            <div class="white_background_conteneur">
+                <div id="conteneur_type_information">
+                    <br>
+                    <br>
+                    <p>Sexe :</p>
+                    <p>Nom :</p>
+                    <p>Prénom :</p>
+                    <p>Nom de naissance :</p>
+                    <p>Date de naissance :</p>
+                    <p>Téléphone :</p>
+                    <p>Email:</p>
+                    <p>Adresse1 :</p>
+                    <p>Adresse2 :</p>
+                    <p>Code postal :</p>
+                    <p>Ville :</p>
+                    <p>Pays :</p>
+                    <br>
+                    <hr>
+                    <br>
+                    <p>Numéros de securité social :</p>
+                    <p>Praticien :</p>
+                    <p>Mutuelle :</p>
+                    <br>
+                </div>
+                <div id="conteneur_information">
+                    <br>
+                    <br>
+                    <p>$Sexe :</p>
+                    <p>$Nom :</p>
+                    <p>$Prénom :</p>
+                    <p>$Nom de naissance :</p>
+                    <p>$Date de naissance :</p>
+                    <p>$Téléphone :</p>
+                    <p>$Email:</p>
+                    <p>$Adresse1 :</p>
+                    <p>$Adresse2 :</p>
+                    <p>$Code postal :</p>
+                    <p>$Ville :</p>
+                    <p>$Pays :</p>
+                    <br>
+                    <hr>
+                    <br>
+                    <p>$Numéros de securité social :</p>
+                    <p>Praticien :</p>
+                    <p>Mutuelle :</p>
+                    <br>
+                </div>
+            </div>
+            test
+
         </div>
         <div class="tab-pane" id="2a">
-            <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+            <h7>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h7>
         </div>
         <div class="tab-pane" id="3a">
-            <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+            <h7>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h7>
         </div>
     </div>
 </div>

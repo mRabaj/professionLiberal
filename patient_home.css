@@ -1,9 +1,10 @@
 body {
     padding: 10px;
 }
+
 li {
     padding-left: 2%;
-    padding-right: 12%;
+    padding-right: 8%;
     padding-top: 10px;
     padding-bottom: 10px;
     border-top-left-radius:10px;
@@ -11,7 +12,7 @@ li {
 }
 
 #exTab1 .tab-content {
-    color : white;
+    color : #428bca;
     background-color: #428bca;
     padding : 5px 15px;
 }
@@ -26,6 +27,7 @@ a{
 
 a:link {
     color: black;
+    font-size: 1.3em;
     text-decoration: none;
 }
 
@@ -48,3 +50,33 @@ a:active {
 .active {
     background-color: #428bca;
 }  
+
+.white_background_conteneur {
+    line-height : 95%;
+    width: 105%;
+    margin-left: -15px;
+    background-color: white;
+    color:#428bca;
+    display: flex;
+    overflow: hidden;
+}
+
+#conteneur_type_information {
+    background-color: #C0D5E7;
+    text-align: right;
+    font-weight: bold;
+    color:#225A8A;
+    width: 25%;
+    padding-right: 2%;
+    padding-left: 2%;
+}
+
+#conteneur_information {
+    margin-left: 2%;
+    margin-right: 2%;
+    /* background-color:blue; */
+    width: 40%;
+}
+.exTab1 {
+    overflow: clip;
+}
