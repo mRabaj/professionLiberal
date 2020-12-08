@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 07 déc. 2020 à 16:03
+-- Généré le : mar. 08 déc. 2020 à 13:06
 -- Version du serveur :  10.4.14-MariaDB
--- Version de PHP : 7.4.11
+-- Version de PHP : 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `test`
+-- Base de données : `professionliberal`
 --
 
 -- --------------------------------------------------------
@@ -82,22 +82,22 @@ CREATE TABLE `patient` (
   `code_postal` varchar(6) NOT NULL,
   `ville` varchar(100) NOT NULL,
   `pays` varchar(100) NOT NULL,
-  `numero-securite_sociale` int(20) NOT NULL,
+  `numero_securite_sociale` int(20) NOT NULL,
   `mot_de_passe` varchar(50) NOT NULL,
   `idMutuelle` int(11) NOT NULL,
-  `idPraticien` int(11) DEFAULT NULL
+  `idPraticien` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `patient`
 --
 
-INSERT INTO `patient` (`idPatient`, `nom`, `prenom`, `sexe`, `nom_naissance`, `date_naissance`, `telephone_portable`, `telephone_fixe`, `email`, `adresse1`, `adresse2`, `code_postal`, `ville`, `pays`, `numero-securite_sociale`, `mot_de_passe`, `idMutuelle`, `idPraticien`) VALUES
+INSERT INTO `patient` (`idPatient`, `nom`, `prenom`, `sexe`, `nom_naissance`, `date_naissance`, `telephone_portable`, `telephone_fixe`, `email`, `adresse1`, `adresse2`, `code_postal`, `ville`, `pays`, `numero_securite_sociale`, `mot_de_passe`, `idMutuelle`, `idPraticien`) VALUES
 (1, 'Porqueres', 'Esteban', 'M', 'Porqueres', '1976-02-25', '0611243500', '', 'esteban@esteban.fr', '13 rue du moulin', '', '12000', 'RODEZ', 'france', 2147483647, 'motDePasse', 2, 2),
 (2, 'Chaloux', 'Archard', 'M', 'Chaloux', '1980-11-14', '0754916340', '', 'archard@archard.fr', '75, Square de la Couronne', '', '01100', 'OYONNAX', 'france', 2147483647, 'motDePasse', 1, 3),
-(3, 'Benton', 'Estelle', 'M', 'Benton', '1987-10-21', '0145369847', '', 'Estelle@Estelle.fr', '72, boulevard d\'Alsace', '', '92170', 'VANVES', 'france', 2147483647, 'motDePasse', 2, 1),
-(4, 'Tessier', 'Odelette', 'F', 'Tessier', '1955-02-04', '0611243500', '', 'Odelette@Odelette.fr', '88, Chemin des Bateliers', '', '73100', 'AIX-LES-BAINS', 'france', 2147483647, 'motDePasse', 3, 2),
-(5, 'Ricard', 'Arlette', 'F', 'Ricard', '1992-04-24', '0426985315', '', 'Arlette@Arlette.fr', '28, rue du Faubourg National', '', '65000', 'TARBES', 'france', 2147483647, 'motDePasse', 3, 5);
+(3, 'Benton', 'Estelle', 'M', 'Benton', '1987-10-21', '0145369847', '', 'estelle@estelle.fr', '72, boulevard d\'Alsace', '', '92170', 'VANVES', 'france', 2147483647, 'motDePasse', 2, 1),
+(4, 'Tessier', 'Odelette', 'F', 'Tessier', '1955-02-04', '0611243500', '', 'odelette@odelette.fr', '88, Chemin des Bateliers', '', '73100', 'AIX-LES-BAINS', 'france', 2147483647, 'motDePasse', 3, 2),
+(5, 'Ricard', 'Arlette', 'F', 'Ricard', '1992-04-24', '0426985315', '', 'arlette@arlette.fr', '28, rue du Faubourg National', '', '65000', 'TARBES', 'france', 2147483647, 'motDePasse', 3, 5);
 
 -- --------------------------------------------------------
 
@@ -125,9 +125,9 @@ CREATE TABLE `praticien` (
 --
 
 INSERT INTO `praticien` (`idPraticien`, `nom`, `prenom`, `telephone`, `email`, `adresse1`, `adresse2`, `code_postal`, `ville`, `pays`, `mot_de_passe`, `code_rpps`) VALUES
-(1, 'Poulin', 'Léon', '0565352585', 'Léon@Léon.fr', '65, rue Pierre De Coubertin', '', '31200', 'TOULOUSE', 'France', 'motDePasse', 2147483647),
-(2, 'Pelletier', 'Raina', '0256348955', 'Raina@Raina.fr', '26, quai Saint-Nicolas', '', '59200', 'TOURCOING', 'France', 'motDePasse', 2147483647),
-(3, 'Ruel', 'Amélie', '0485632489', 'Amélie@Amélie.fr', '44, Rue Frédéric Chopin', '', '70000', 'VESOUL', 'France', 'motDePasse', 2147483647);
+(1, 'Poulin', 'Léon', '0565352585', 'leon@leon.fr', '65, rue Pierre De Coubertin', '', '31200', 'TOULOUSE', 'France', 'motDePasse', 2147483647),
+(2, 'Pelletier', 'Raina', '0256348955', 'raina@raina.fr', '26, quai Saint-Nicolas', '', '59200', 'TOURCOING', 'France', 'motDePasse', 2147483647),
+(3, 'Ruel', 'Amélie', '0485632489', 'amelie@amelie.fr', '44, Rue Frédéric Chopin', '', '70000', 'VESOUL', 'France', 'motDePasse', 2147483647);
 
 -- --------------------------------------------------------
 
@@ -205,6 +205,16 @@ ALTER TABLE `praticien`
 --
 ALTER TABLE `rendez_vous`
   MODIFY `idRdv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `rendez_vous`
+--
+ALTER TABLE `rendez_vous`
+  ADD CONSTRAINT `rendez_vous_ibfk_1` FOREIGN KEY (`idRdv`) REFERENCES `patient` (`idPatient`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
