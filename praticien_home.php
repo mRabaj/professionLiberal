@@ -12,9 +12,9 @@
     <div class="container"><h3>M/Mme nom prenom</h3></div>
     <div id="exTab1" class="container">	
         <ul class="nav nav-pills">
-            <li class="active"><a  href="#1a" data-toggle="tab">Liste passiant</a>
+            <li class="active"><a  href="#1a" data-toggle="tab">Liste des patients</a>
             </li>
-            <li><a href="#2a" data-toggle="tab">Nouveau passiant</a>
+            <li><a href="#2a" data-toggle="tab">Nouveau patient</a>
             </li>
             <li><a href="#3a" data-toggle="tab">Emplois du temps</a>
             </li>
@@ -23,8 +23,52 @@
             <div class="tab-pane active" id="1a">
                 <h7>yo</h7>
                 <div class="white_background_conteneur">
-                    test
+
+                    <table id="table_id" class="display">
+                        <thead>
+                            <tr>
+                                <th>Sexe+Nom+Prenom</th>
+                                <th>Date de naissance</th>
+                                <th>Téléphone portable+fixe</th>
+                                <th>Email</th>
+                                <th>Adresse</th>
+                                <th>Code postal</th>
+                                <th>Ville</th>
+                                <th>Pays</th>
+                                <th>n° sécuriter social</th>
+                                <th>mutuelle</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Row 1 Data 1</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2 Data 1</td>
+                                <td>Row 2 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                                <td>Row 1 Data 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
                 test
             </div>
 
