@@ -11,11 +11,10 @@ catch(Exception $e)
 }               
     
         $BddByCountry=$bdd->query('SELECT id_pays,libelle_pays from t_pays ORDER BY libelle_pays ASC');
-    
+   
 
 
 require_once("functions/functions.php");
-
 require_once("class/dao.php"); 
 
   $find=false;
@@ -24,7 +23,7 @@ if (isset($_POST['register']))
 { 
       if ($_POST['pwd']==$_POST['rpwd'])
       {   
-       foreach($dao->getMailPatient() as $item){
+       foreach($dao->getPatient() as $item){
            if ($item['email']==strtolower($_POST['mail']))
            {
               $find=true;
@@ -46,29 +45,37 @@ if (isset($_POST['register']))
         $code_postal=$_POST['code-postal'];
         $ville=ucwords(strtolower($_POST['ville']));
         $pays=$_POST['country'];
-        $numero_sociale=$_POST['numero-securite-sociale'];
-        $mot_passe=password_hash($_POST["pwd"], PASSWORD_ARGON2I);
+
+        $message="";        
+        $verif=valideNir($_POST['numero-securite-sociale']);
+        if ($verif==true) {
+            $numero_sociale=$_POST['numero-securite-sociale'];
+        } else {
+            $message="Veuillez saisir un muméro de sécurité sociale valide";
+        }
+
+        $mot_de_passe=password_hash($_POST["pwd"], PASSWORD_ARGON2I);
         $mutual=$_POST['mutual'];
         $praticien=$_POST['practitioner'];
 
-        $dao->insertPatient($nom,$prenom,$sexe,$nom_naissance,$date_naissance,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$numero_sociale,$mot_passe,$mutual,$praticien);
+        $dao->insertPatient($nom,$prenom,$sexe,$nom_naissance,$date_naissance,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$numero_sociale,$mot_de_passe,$mutual,$praticien);
         if ($dao->getError()) {
-            print $dao1->getError();
+            print $dao->getError();
         }
         $send=sendMail($_POST['mail'],$_POST["firstName"]." ".$_POST["lastName"],"Confirmation d'inscription",file_get_contents("mail-register.html"));
 
-       header("location:connexion.php");
+       
        if ($send===true) {
         /* redirection vers la page d'identification si inscription réussie */
         header("Location:connexion.php?register=ok");
-      } else {
-        $error=$send;
-      }
-         }
-         }else {
-		  
-          $error="Mail déjà enregistré. Vous pouvez vous connecter ou choisir une autre adresse mail !.";
+        } else {
+            $error=$send;
         }
+            }
+            }else {
+            
+            $error="Mail déjà enregistré. Vous pouvez vous connecter ou choisir une autre adresse mail !.";
+            }
 }
     
 ?>
@@ -94,6 +101,7 @@ if (isset($_POST['register']))
                         var obj=JSON.parse(xhttp.responseText);
 						for (var i=0;i<obj.length;i++) {								
 							if (obj[i].email==document.getElementById('email').value){
+                                console.log(obj[i].email);
 							alert("Il y a déjà un compte enregistrer avec cette adresse mail !<\n> Veuillez-vous connecter !.");
 							}
 						}
@@ -107,7 +115,7 @@ if (isset($_POST['register']))
 		
 		function checkPwd(){
 			if(document.getElementById('pwd').value!==document.getElementById('rpwd').value){
-				alert("Le mot de passe ne correspond pas !")
+				alert("les mots de passe ne correspondent pas !");
 			   }
 		}
 		</script>
@@ -127,7 +135,7 @@ if (isset($_POST['register']))
                 </div> 
                 <div>
                 <input type="radio" id="man" name="sexe" value="M">
-                <label for="women">Homme</label>
+                <label for="man">Homme</label>
                 </div> 
                 </article>
                 <div class="col-12">
@@ -145,6 +153,7 @@ if (isset($_POST['register']))
                     <input type="text" name="nom-naissance" id="nom-naissance" value="<?php if (isset($_POST['nom-naissance'])&& $_POST['nom-naissance']){print $_POST['nom-naissance'];} ?>" required> 
                 </div>
                 <div class="col-12">
+                    <b><?php $message;?></b>
                     <label for="numero-securite-sociale"> Numéro de sécurité sociale :</label>
                     <input type="number" name="numero-securite-sociale" id="numero-securite-sociale" value="<?php if (isset($_POST['numero-securite-sociale'])&& $_POST['numero-securite-sociale']){print $_POST['numero-securite-sociale'];} ?>" required> 
                 </div>
@@ -153,23 +162,22 @@ if (isset($_POST['register']))
                     <input type="date" name="date-de-naissance" class="form-control " id="birthdate" value="<?php if (isset($_POST['date-de-naissance'])&& $_POST['date-de-naissance']){print $_POST['date-de-naissance'];}?>" placeholder="" required>
                 </div>
                 <div class="col-6">
-                <label for="port">Téléphone portable :</label>
-                <input type="tel" name="numero-de-telephone-portable" class="form-control " id="port" value="<?php if (isset($_POST['numero-de-telephone-portable'])&& $_POST['numero-de-telephone-portable']){print $_POST['numero-de-telephone-portable'];}?>" placeholder="" required>
-                </div>
+                <label for="port">Téléphone portable :
+                <input type="tel" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$"  name="numero-de-telephone-portable" class="form-control " id="port" value="<?php if (isset($_POST['numero-de-telephone-portable'])&& $_POST['numero-de-telephone-portable']){print $_POST['numero-de-telephone-portable'];}?>" placeholder="exemple : 0600000000"  required>
+               </label> 
+               </div>
                 <div class="col-6">
                 <label for="fixe">Téléphone fixe :</label>
-                <input type="tel" name="numero-de-telephone-fixe" class="form-control " id="fixe" value="<?php if (isset($_POST['numero-de-telephone-fixe'])&& $_POST['numero-de-telephone-fixe']){print $_POST['numero-de-telephone-fixe'];}?>" placeholder="" >
+                <input type="tel" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$"  name="numero-de-telephone-fixe" class="form-control " id="fixe" value="<?php if (isset($_POST['numero-de-telephone-fixe'])&& $_POST['numero-de-telephone-fixe']){print $_POST['numero-de-telephone-fixe'];}?>" placeholder="" >
                 </div>
-                
-
                 <div class="col-12">
                     <label for="email">Adresse email </label>
-                    <input type="email" name="mail" id="email" onChange="checkMail()" value="<?php if (isset($_POST['mail'])&& $_POST['mail']){print $_POST['mail'];}  ?>" required> 
+                    <input type="email" name="mail" id="email" onChange="checkMail()" value="<?php if (isset($_POST['mail'])&& $_POST['mail']){print $_POST['mail'];}  ?>" > 
                 </div>
 
                 <div class="col-12">
                 <label for="adresse1">Adresse 1 :</label>                    
-                <input type="text" name="adresse-1" class="form-control " id="adresse1" value="<?php if (isset($_POST['adresse-1'])&& $_POST['adresse-1']){print $_POST['adresse-1'];}?>" placeholder=""  required>      
+                <input type="text" name="adresse-1" class="form-control " id="adresse1" value="<?php if (isset($_POST['adresse-1'])&& $_POST['adresse-1']){print $_POST['adresse-1'];}?>" placeholder=""  >      
                 </div>
                 <div class="col-12">
                 <label for="adresse2">Adresse 2:</label>
@@ -177,22 +185,22 @@ if (isset($_POST['register']))
                 </div>
                 <div class="col-12">
                 <label for="cp">Code Postal :</label>
-                <input type="number" name="code-postal" class="form-control " id="cp" value="<?php if (isset($_POST['code-postal'])&& $_POST['code-postal']){print $_POST['code-postal'];}?>" placeholder="" required>
+                <input type="text" name="code-postal" class="form-control " id="cp" value="<?php if (isset($_POST['code-postal'])&& $_POST['code-postal']){print $_POST['code-postal'];}?>" placeholder="" >
                 </div>
                 <div class="col-12">
                 <label for="ville">Ville :</label>
-                <input type="text" name="ville" class="form-control " id="ville" value="<?php if (isset($_POST['ville'])&& $_POST['ville']){print $_POST['ville'];}?>" placeholder="" required>
+                <input type="text" name="ville" class="form-control " id="ville" value="<?php if (isset($_POST['ville'])&& $_POST['ville']){print $_POST['ville'];}?>" placeholder="" >
                 </div>
 
                 
                 <label for="country" >Pays :</label>
-                <select name="country" id="country" class="col-12" required>
-                <option value="">SÉLECTIONNER UN PAYS </option>
+                <select name="country" id="country" class="col-12" >
+                <option value="">Sélectionner un pays : </option>
 			    <?php
                 while ($country = $BddByCountry->fetch(PDO::FETCH_ASSOC))
                 {
                 ?>
-				<option value="<?= $country["libelle_pays"] ?>" <?php if(isset($_GET["country"])&&$_GET["country"]==$country["libelle_pays"]) {print "selected";} ?>><?= $country["libelle_pays"] ?></option>
+				<option value="<?= $country["libelle_pays"] ?>" <?php  if($country["libelle_pays"]=="France (métropolitaine)") {print "selected";} ?>><?= $country["libelle_pays"] ?></option>
 
 				<?php
 				}
@@ -200,7 +208,7 @@ if (isset($_POST['register']))
 				?>
 			    </select>      
                 <label for="mutual" >Mutuelle :</label>
-                <select name="mutual" id="mutual" class="col-12" required>
+                <select name="mutual" id="mutual" class="col-12" >
                 <option value="NULL">Pas de mutuelle</option>
                 <?php 
                    foreach($dao->getNameMutuelle() as $item){
@@ -212,7 +220,7 @@ if (isset($_POST['register']))
 
                 </select>
                 <label for="practitioner" >Votre praticien :</label>
-                <select name="practitioner" id="practitioner" class="col-12" required>
+                <select name="practitioner" id="practitioner" class="col-12" >
                 <option value="NULL">Pas encore de praticien</option>
                 <?php 
                    foreach($dao->getNamePractitioner() as $item){
@@ -225,12 +233,12 @@ if (isset($_POST['register']))
                 </select>
                 <div class="col-6">
                     <label for="pwd"> Mot de passe </label>
-                    <input type="password" name="pwd" id="pwd"  required> 
+                    <input type="password" name="pwd" id="pwd" minlength="" > 
                 </div>
 
                 <div class="col-6">
                     <label for="rpwd">Confirmer le mot de passe</label>
-                    <input type="password" name="rpwd" id="rpwd" onChange="checkPwd()" required> 
+                    <input type="password" name="rpwd" id="rpwd" minlength="" onChange="checkPwd()" > 
                 </div>
 
 

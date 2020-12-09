@@ -60,10 +60,11 @@ class DAO {
 	   * @param integer $practitioner
 	   * @returns array
 	   */
-		public function getMailPatient() {
-			$sql="SELECT `idPatient`, `email` FROM `patient` ORDER BY email";
+		public function getPatient() {
+			$sql="SELECT `idPatient` AS 'iPatient', `email`,`mot_de_passe` AS 'pwd',nom, prenom  FROM `patient` ORDER BY nom ASC";
 			return $this->executeQuery($sql);
 			}
+		
 		public function getNamePractitioner(){
 			$sql="SELECT `idPraticien`,`nom`,`prenom` FROM `praticien` ORDER BY nom";
 			return $this->executeQuery($sql);
@@ -73,8 +74,12 @@ class DAO {
 			return $this->executeQuery($sql);
 		}
 
-		public function insertPatient($nom,$prenom,$sexe,$nom_naissance,$date_naissance,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$numero_sociale,$mot_passe,$mutual,$praticien) {
-			$sql='INSERT INTO `patient`( `nom`, `prenom`, `sexe`, `nom_naissance`, `date_naissance`, `telephone_portable`, `telephone_fixe`, `email`, `adresse1`, `adresse2`, `code_postal`, `ville`, `pays`, `numero_securite_sociale`, `mot_de_passe`,`idMutuelle`, `idPraticien`) VALUES ("'.$nom.'","'.$prenom.'","'.$sexe.'","'.$nom_naissance.'","'.$date_naissance.'","'.$portable.'","'.$fixe.'","'.$email.'","'.$adresse1.'","'.$adresse2.'","'.$code_postal.'","'.$ville.'","'.$pays.'","'.$numero_sociale.'","'.$mot_passe.'","'.$mutual.'","'.$praticien.'")';
+		public function insertPatient($nom,$prenom,$sexe,$nom_naissance,$date_naissance,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$numero_sociale,$mot_de_passe,$mutual,$praticien) {
+			$sql='INSERT INTO `patient`( `nom`, `prenom`, `sexe`, `nom_naissance`, `date_naissance`, `telephone_portable`, `telephone_fixe`, `email`, `adresse1`, `adresse2`, `code_postal`, `ville`, `pays`, `numero_securite_sociale`, `mot_de_passe`,`idMutuelle`, `idPraticien`) VALUES ("'.$nom.'","'.$prenom.'","'.$sexe.'","'.$nom_naissance.'","'.$date_naissance.'","'.$portable.'","'.$fixe.'","'.$email.'","'.$adresse1.'","'.$adresse2.'","'.$code_postal.'","'.$ville.'","'.$pays.'",'.$numero_sociale.',"'.$mot_de_passe.'",'.$mutual.','.$praticien.')';
+			return $this->executeNonQuery($sql);
+		}
+		public function updatePwdPatient($mot_de_passe,$idPatient){
+			$sql='UPDATE `patient` SET `mot_de_passe`="'.$mot_de_passe.'" WHERE `idPatient`='.$idPatient;
 			return $this->executeNonQuery($sql);
 		}
 		
