@@ -2,8 +2,8 @@
     class DAO {
         private $host="localhost";
         private $db="test";
-        private $user="user_patient";
-        private $password="Mot_de_passe_patient";
+        private $user="liberal_select";
+        private $password="liberal_select";
         private $bdd;
         private $error="";
 
