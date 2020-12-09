@@ -40,7 +40,8 @@
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <!-- passer en for ou foreatch + aller chercher donné dans bdd -->
+                        <tbody> 
                             <tr>
                                 <td>Row 1 Data 1</td>
                                 <td>Row 1 Data 2</td>
