@@ -68,6 +68,16 @@
 			return $this->executeQuery($sql);
         }
 
+
+        public function getNomPraticien($select="",$id=""){
+            $sql="SELECT ".$select." FROM praticien WHERE idPraticien=".$id ;
+            return $this->executeQuery($sql);
+        }
+
+        public function getInfoPatient($select="",$id=""){
+            $sql="SELECT ".$select." FROM patient";
+            return $this->executeQuery($sql);
+        }
     }    
     // $dao= new DAO();
     // if ($dao->getERROR()) {
