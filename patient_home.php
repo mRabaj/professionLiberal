@@ -16,6 +16,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="patient_home.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <title>Home patient</title>
 </head>
@@ -88,7 +89,7 @@
 
         </div>
         <div class="tab-pane" id="2a">
-            <h7>ca va ?</h7>
+            <h7>grave</h7>
             <div class="white_background_conteneur">
             </div>
         </div>
@@ -96,7 +97,7 @@
             <h7>grave</h7>
             <div class="white_background_conteneur">
                 
-                <form action="file-upload.php" method="post" enctype="multipart/form-data" class="mb-3">
+                <form action="file-upload.php" method="post" enctype="multipart/form-data" class="mb-3" id="form_envoi">
                     <h3 class="text-center mb-5">Envoiller un fichier</h3>
 
                     <div class="user-image mb-3 text-center">
@@ -115,25 +116,26 @@
                     </button>
                     <!-- echo '<script type="text/javascript">window.alert("'.$documents.'");</script>'; -->
                 </form>
-                <!-- historique -->
-                <table id="table_id" class="display">
-                    <thead>
-                        <tr>
-                            <th>Nom du fichier</th>
-                            <th>Date d'envoi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
 
-                        <?php for ($i=0;$i<count($doc) ;$i++) { 
-                            echo "<tr>"; 
-                            echo "<th>".$doc[$i]["titre"]."</th>";
-                            echo "<th>".$doc[$i]["dateE"]."</th>";
-                            echo "</tr>";
-                        }?>
-
-                    </tbody>
-                </table>
+                <div id="table_historique">
+                    <div id="titre_historique">Historique des envois de fichiers :</div>
+                    <table id="table_id" class="display">
+                        <thead>
+                            <tr>
+                                <th>Nom du fichier</th>
+                                <th>Date d'envoi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php for ($i=0;$i<count($doc) ;$i++) { 
+                                echo "<tr>"; 
+                                echo "<th>".$doc[$i]["titre"]."</th>";
+                                echo "<th>".$doc[$i]["dateE"]."</th>";
+                                echo "</tr>";
+                            }?>
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
             test
@@ -146,7 +148,14 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+
 <script>
+    $(document).ready( function () {
+        $('#table_id').DataTable();
+    });
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
