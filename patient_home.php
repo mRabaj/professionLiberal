@@ -1,11 +1,13 @@
 <?php
     require_once("db_object_patient.php");
+
     $dao= new DAO();
     if ($dao->getERROR()) {
         print "erreur: ".$dao->getError();
     }
     $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticien,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
     // print_r($item);
+    $doc=$dao->getDocuments();
 ?>
 
 <!DOCTYPE html>
@@ -93,13 +95,76 @@
         <div class="tab-pane" id="3a">
             <h7>grave</h7>
             <div class="white_background_conteneur">
+                
+                <form action="file-upload.php" method="post" enctype="multipart/form-data" class="mb-3">
+                    <h3 class="text-center mb-5">Envoiller un fichier</h3>
+
+                    <div class="user-image mb-3 text-center">
+                        <div style="width: 100px; height: 100px; overflow: hidden; background: #cccccc; margin: 0 auto">
+                            <img src="..." class="figure-img img-fluid rounded" id="imgPlaceholder" alt="">
+                        </div>
+                    </div>
+
+                    <div class="custom-file">
+                        <input type="file" name="fileUpload" class="custom-file-input" id="chooseFile">
+                        <label class="custom-file-label" for="chooseFile" id="choisirFichier">Choisir le fichier</label>
+                    </div>
+
+                    <button type="submit" name="submit" class="btn btn-primary btn-block mt-4">
+                        envoie
+                    </button>
+                    <!-- echo '<script type="text/javascript">window.alert("'.$documents.'");</script>'; -->
+                </form>
+                <!-- historique -->
+                <table id="table_id" class="display">
+                    <thead>
+                        <tr>
+                            <th>Nom du fichier</th>
+                            <th>Date d'envoi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <?php for ($i=0;$i<count($doc) ;$i++) { 
+                            echo "<tr>"; 
+                            echo "<th>".$doc[$i]["titre"]."</th>";
+                            echo "<th>".$doc[$i]["dateE"]."</th>";
+                            echo "</tr>";
+                        }?>
+
+                    </tbody>
+                </table>
+
             </div>
+            test
         </div>
     </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgPlaceholder').attr('src', e.target.result);
+                document.getElementById("choisirFichier").innerHTML = input.files[0].name;
+            }
+
+            // base64 string conversion
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#chooseFile").change(function () {
+        readURL(this);
+    });
+</script>
 
 </body>
 </html>

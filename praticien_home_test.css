@@ -80,9 +80,3 @@ a:active {
 .exTab1 {
     overflow: clip;
 }
-
-#choisirFichier {
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis; /* ne marche pas... */
-}
