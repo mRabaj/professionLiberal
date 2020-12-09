@@ -130,7 +130,7 @@
                             <?php for ($i=0;$i<count($doc) ;$i++) { 
                                 echo "<tr>"; 
                                 echo "<th>".$doc[$i]["titre"]."</th>";
-                                echo "<th>".$doc[$i]["dateE"]."</th>";
+                                echo "<th>".date("d/m/Y", strtotime($doc[$i]["dateE"]))."</th>";  //hh:mm
                                 echo "</tr>";
                             }?>
                         </tbody>
