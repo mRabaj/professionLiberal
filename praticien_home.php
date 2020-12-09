@@ -1,3 +1,16 @@
+<?php
+    require_once("db_object_patient.php");
+    $dao= new DAO();
+    if ($dao->getERROR()) {
+        print "erreur: ".$dao->getError();
+    }
+    $item=$dao->getNomPraticien("nom, prenom",1);   
+    // print_r($item);
+    $infoPatient=$dao->getInfoPatient("sexe, nom, prenom, date_naissance, telephone_portable, telephone_fixe, email, adresse1, adresse2, code_postal, ville, pays, numero_securite_sociale, idMutuelle");
+    // print_r($infoPatient);
+    // print count($infoPatient);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,7 +22,7 @@
 </head>
 <body>
 
-    <div class="container"><h3>M/Mme nom prenom</h3></div>
+    <div class="container"><h3><?= $item[0]["nom"]?> <?= $item[0]["prenom"]?></h3></div>
     <div id="exTab1" class="container">	
         <ul class="nav nav-pills">
             <li class="active"><a  href="#1a" data-toggle="tab">Liste des patients</a>
@@ -39,34 +52,17 @@
                                 <th>mutuelle</th>
                             </tr>
                         </thead>
-
-                        <!-- passer en for ou foreatch + aller chercher donné dans bdd -->
+                        <!-- creer array avec tout les info au bon format, puis aller chercher via for + $i -->
                         <tbody> 
-                            <tr>
-                                <td>Row 1 Data 1</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                            </tr>
-                            <tr>
-                                <td>Row 2 Data 1</td>
-                                <td>Row 2 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                                <td>Row 1 Data 2</td>
-                            </tr>
+                            <?php for ($i=0;$i<count($infoPatient);$i++) { 
+                                echo "<tr>";
+                                for ($i2=0;$i2<=9;$i2++) { 
+                                    echo "<th>".($i2+1)."</th>";
+                                }
+                                echo "</tr>";
+                            }?>
                         </tbody>
+
                     </table>
                 </div>
 
