@@ -6,7 +6,7 @@
     }
     $item=$dao->getNomPraticien("nom, prenom",1);   
     // print_r($item);
-    $infoPatient=$dao->getInfoPatient("sexe, nom, prenom, date_naissance, telephone_portable, telephone_fixe, email, adresse1, adresse2, code_postal, ville, pays, numero_securite_sociale, idMutuelle");
+    $infoPatient=$dao->getInfoPatient("sexe, patient.nom, prenom, date_naissance, telephone_portable, telephone_fixe, patient.email, adresse1, adresse2, patient.code_postal, patient.ville, pays, numero_securite_sociale, mutuelle.nom as mutuelle",2);
     // print_r($infoPatient);
     // print count($infoPatient);
 ?>
@@ -22,7 +22,6 @@
     <title>Home praticien</title>
 </head>
 <body>
-
     <div class="container"><h3><?= $item[0]["nom"]?> <?= $item[0]["prenom"]?></h3></div>
     <div id="exTab1" class="container">	
         <ul class="nav nav-pills">
@@ -41,9 +40,9 @@
                     <table id="table_id" class="display">
                         <thead>
                             <tr>
-                                <th>Sexe+Nom+Prenom</th>
+                                <th>Patient</th>
                                 <th>Date de naissance</th>
-                                <th>Téléphone portable+fixe</th>
+                                <th>Téléphone</th>
                                 <th>Email</th>
                                 <th>Adresse</th>
                                 <th>Code postal</th>
@@ -55,13 +54,30 @@
                         </thead>
                         <!-- creer array avec tout les info au bon format, puis aller chercher via for + $i -->
                         <tbody> 
-                            <?php for ($i=0;$i<count($infoPatient);$i++) { 
-                                echo "<tr>";
-                                for ($i2=0;$i2<=9;$i2++) { 
-                                    echo "<th>".($i2+1)."</th>";
+                            <?php 
+                                $nominationPatient="";
+                                for ($i=0;$i<count($infoPatient);$i++) { 
+
+                                    if ($infoPatient[$i]["sexe"]=="M") {
+                                        $nominationPatient="M.";
+                                    }else{
+                                        $nominationPatient="Mme.";
+                                    }
+
+                                    echo "<tr>";
+                                        echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
+                                        echo "<th>".date("d/m/Y", strtotime($infoPatient[$i]["date_naissance"]))."</th>";
+                                        echo "<th>".$infoPatient[$i]["telephone_portable"]."".$infoPatient[$i]["telephone_fixe"]."</th>";
+                                        echo "<th>".$infoPatient[$i]["email"]."</th>";
+                                        echo "<th>".$infoPatient[$i]["adresse1"]." ".$infoPatient[$i]["adresse2"]."</th>";
+                                        echo "<th>".$infoPatient[$i]["code_postal"]."</th>";
+                                        echo "<th>".$infoPatient[$i]["ville"]."</th>";
+                                        echo "<th>".$infoPatient[$i]["pays"]."</th>";
+                                        echo "<th> n°".$infoPatient[$i]["numero_securite_sociale"]."</th>";
+                                        echo "<th>".$infoPatient[$i]["mutuelle"]."</th>";
+                                    echo "</tr>";
                                 }
-                                echo "</tr>";
-                            }?>
+                            ?>
                         </tbody>
 
                     </table>
@@ -89,11 +105,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
     <script>
         $(document).ready( function () {
             $('#table_id').DataTable();
         } );
-    <script>
+    </script>
 
 </body>
 </html>

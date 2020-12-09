@@ -40,7 +40,8 @@
         }
 
         public function getInfoPatient($select="",$id=""){
-            $sql="SELECT ".$select." FROM patient";
+            $sql="SELECT ".$select." FROM patient LEFT JOIN mutuelle ON (patient.idMutuelle=mutuelle.idMutuelle) WHERE idPraticien=".$id;
+            // print $sql;
             return $this->executeQuery($sql);
         }
     }    
