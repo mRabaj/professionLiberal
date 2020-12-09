@@ -33,6 +33,16 @@
             $sql="SELECT ".$select." FROM patient LEFT JOIN mutuelle ON (mutuelle.idMutuelle=patient.idMutuelle) LEFT JOIN praticien ON (praticien.idPraticien=patient.idPraticien) WHERE idPatient=".$id ;
             return $this->executeQuery($sql);
         }
+
+        public function getNomPraticien($select="",$id=""){
+            $sql="SELECT ".$select." FROM praticien WHERE idPraticien=".$id ;
+            return $this->executeQuery($sql);
+        }
+
+        public function getInfoPatient($select="",$id=""){
+            $sql="SELECT ".$select." FROM patient";
+            return $this->executeQuery($sql);
+        }
     }    
 
     // $dao= new DAO();
