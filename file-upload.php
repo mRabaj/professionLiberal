@@ -12,12 +12,9 @@ $fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
 $file_contents= file_get_contents ($_FILES['fileUpload']['tmp_name']);
 $file_hex="";
 
-$handle = @fopen($_FILES['fileUpload']['tmp_name'], "r"); 
-if ($handle) {     
-    while (!feof($handle)) {         
-        $hex = bin2hex(fread ($handle , 4 ));         
-        $file_hex.= $hex; //."\n" pour ajouter un saut de ligne    
-    }     
+$handle = @fopen($_FILES['fileUpload']['tmp_name'], "rb"); 
+if ($handle) {        
+    $file_base64= base64_encode(fread ($handle , filesize($_FILES['fileUpload']['tmp_name']) ));  
     fclose($handle);  
 } 
 
@@ -29,7 +26,7 @@ if(isset($_POST["submit"]) && !empty($_FILES["fileUpload"]["name"])){
         if(move_uploaded_file($_FILES["fileUpload"]["tmp_name"], $targetFilePath)){
             // Insert image file name into database
             
-            $insert = $db->insertdocuments($fileName,$file_hex);
+            $insert = $db->insertdocuments($fileName,$file_base64);
             if($insert){
                 unlink("uploads/".$fileName); // delete le fichier
                 // $statusMsg = "The file ".$fileName." has been uploaded successfully.";

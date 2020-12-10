@@ -111,7 +111,7 @@
                             <img src="..." class="figure-img img-fluid rounded" id="imgPlaceholder" alt="">
                         </div>
                     </div>
-                    <span id="texte_fichier_uniquement">Uniquement des fichier jpg, png, jpeg et pdf</span>
+                    <span id="texte_fichier_uniquement">Uniquement des fichier jpg, png et jpeg</span>
                     <div class="custom-file" id="div_file_upload">
                         <input type="file" name="fileUpload" class="custom-file-input" id="chooseFile">
                         <label class="custom-file-label" for="chooseFile" id="choisirFichier">Choisir le fichier</label>
@@ -134,7 +134,7 @@
                         </thead>
                         <tbody>
                             <?php for ($i=0;$i<count($doc) ;$i++) { 
-                                echo '<tr value='.$doc[$i]["hex"].'>'; 
+                                echo '<tr value='.$doc[$i]["hex"].' value2='.$doc[$i]["extension"].'>'; 
                                 echo "<th>".$doc[$i]["titre"]."</th>";
                                 echo "<th>".date("d/m/Y h:i", strtotime($doc[$i]["dateE"]))."</th>";  //hh:mm
                                 echo "</tr>";
@@ -157,21 +157,22 @@
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
 
-
 <script>
     $(document).ready( function () {
         $('#table_id').DataTable();
+        $('#img_historique').hide();
 
         $('#table_id tbody').on('mouseover', 'tr', function () {
-            
             var hex_data=$(this).attr('value');
-            // var src_image=hex_data.replace(/(.{6})(?=.)/g,"$1 "); //\n
-            console.log(hex_data);
 
-            $('#img_historique').attr('src', 'data:image/png;base64,'+hex_data);
+            extencion=$(this).attr('value2');
 
-            // <img src="data:image/png;base64," alt="Red dot" />
+            $('#img_historique').attr('src', 'data:image/'+extencion+';base64,'+hex_data);
+            $('#img_historique').show();
+        });
 
+        $( "#table_id tbody" ).mouseleave(function() {
+            $('#img_historique').hide();
         });
     });
 

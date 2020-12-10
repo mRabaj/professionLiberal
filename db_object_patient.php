@@ -58,7 +58,7 @@
         }
 
         public function insertdocuments($name,$documents) {    
-            $extension = substr($name, strpos($name, "."));    
+            $extension = substr($name, strpos($name, ".")+1);    
             $sql="INSERT INTO documents VALUES ('',1,'".$name."',NOW(),'','".$documents."','".$extension."')";
             // print $sql;
 			return $this->executeNonQuery($sql);
@@ -80,13 +80,4 @@
             return $this->executeQuery($sql);
         }
     }    
-    // $dao= new DAO();
-    // if ($dao->getERROR()) {
-    //     print "erreur: ".$dao->getError();
-    // }
-    // foreach ($dao->getNomPrenom("*","1") as $item) {
-    //     print $item["nom"];
-    // }
-    // $dao->insertpatient("banane","flambé");
-    // print "yes";
 ?>

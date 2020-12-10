@@ -91,7 +91,7 @@ a:active {
     position: relative;
     margin-top: 30px;
     padding-bottom: 30px;
-    padding-left: 15%;
+    padding-left: 14%;
 }
 #titre_historique{
     position: relative;
@@ -103,7 +103,8 @@ a:active {
 
 #form_envoi {
     margin-top: 20px;
-    padding-left: 7%;
+    padding-left: 3%;
+    width: 30%;
 }
 
 #texte_fichier_uniquement{
@@ -116,7 +117,10 @@ a:active {
 }
 
 #img_historique {
-    position: relative;
-    width: 200px;
-    height: 200px;
+    z-index: 100;
+    position: fixed;
+    margin-top: 10px;
+    margin-left: 220px;
+    width: 280px;
+    height: 280px;
 }
