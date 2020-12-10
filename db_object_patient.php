@@ -1,7 +1,7 @@
 <?php
     class DAO {
         private $host="localhost";
-        private $db="test";
+        private $db="professionliberal";
         private $user="liberal_select";
         private $password="liberal_select";
         private $bdd;

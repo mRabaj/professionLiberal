@@ -4,9 +4,9 @@
     if ($dao->getERROR()) {
         print "erreur: ".$dao->getError();
     }
-    $item=$dao->getNomPraticien("nom, prenom",1);   
+    $item=$dao->getNomPraticien("nom, prenom, sexe",1);   
     // print_r($item);
-    $infoPatient=$dao->getInfoPatient("sexe, patient.nom, prenom, date_naissance, telephone_portable, telephone_fixe, patient.email, adresse1, adresse2, patient.code_postal, patient.ville, pays, numero_securite_sociale, mutuelle.nom as mutuelle",2);
+    $infoPatient=$dao->getInfoPatient("patient.sexe, patient.nom, prenom, date_naissance, telephone_portable, telephone_fixe, patient.email, adresse1, adresse2, patient.code_postal, patient.ville, pays, numero_securite_sociale, mutuelle.nom as mutuelle",2);
     // print_r($infoPatient);
     // print count($infoPatient);
 ?>
@@ -22,7 +22,14 @@
     <title>Home praticien</title>
 </head>
 <body>
-    <div class="container"><h3><?= $item[0]["nom"]?> <?= $item[0]["prenom"]?></h3></div>
+    <?php $nomination="";
+    if($item[0]["sexe"]=="M"){
+        $nomination="M. ";
+    }else{
+        $nomination="Mme. ";
+    }
+    ?>
+    <div class="container"><h3><?=$nomination.$item[0]["nom"].$item[0]["prenom"]?></h3></div>
     <div id="exTab1" class="container">	
         <ul class="nav nav-pills">
             <li class="active"><a  href="#1a" data-toggle="tab">Liste des patients</a>

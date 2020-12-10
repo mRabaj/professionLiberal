@@ -80,3 +80,8 @@ a:active {
 .exTab1 {
     overflow: clip;
 }
+
+#table_id{
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
