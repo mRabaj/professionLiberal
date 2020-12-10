@@ -5,7 +5,7 @@
     if ($dao->getERROR()) {
         print "erreur: ".$dao->getError();
     }
-    $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticienN,praticien.prenom as praticienP,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
+    $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticienN,praticien.prenom as praticienP,praticien.sexe as praticienS,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
     // print_r($item);
     $doc=$dao->getDocuments();
 ?>
@@ -80,7 +80,13 @@
                     <hr>
                     <br>
                     <br><?= $item[0]["numero_securite_sociale"]?><br>
-                    <br><?= $item[0]["praticienN"]." ".$item[0]["praticienP"]?><br>
+                    <?php $nomination="";
+                    if ($item[0]["praticienS"]=="M"){
+                        $nomination="M.";
+                    }else{
+                        $nomination="Mme. ";
+                    }?>
+                    <br><?=$nomination.$item[0]["praticienN"]." ".$item[0]["praticienP"]?><br>
                     <br><?= $item[0]["mutuelle"]?><br>
                     <br>
                 </div>
@@ -130,7 +136,7 @@
                             <?php for ($i=0;$i<count($doc) ;$i++) { 
                                 echo "<tr>"; 
                                 echo "<th>".$doc[$i]["titre"]."</th>";
-                                echo "<th>".date("d/m/Y", strtotime($doc[$i]["dateE"]))."</th>";  //hh:mm
+                                echo "<th>".date("d/m/Y h:i", strtotime($doc[$i]["dateE"]))."</th>";  //hh:mm
                                 echo "</tr>";
                             }?>
                         </tbody>
