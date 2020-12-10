@@ -8,8 +8,8 @@
     // print_r($item);
     $infoPatient=$dao->getInfoPatient("patient.sexe, patient.nom, prenom, date_naissance, telephone_portable, telephone_fixe, patient.email, adresse1, adresse2, patient.code_postal, patient.ville, pays, numero_securite_sociale, mutuelle.nom as mutuelle",2);
     // print_r($infoPatient);
-    $infoUpload=$dao->getInfoUpload("patient.nom, patient.prenom, patient.sexe,titre, documents.date",2);
-    print_r($infoUpload);
+    $infoUpload=$dao->getInfoUpload("patient.nom, patient.prenom, patient.sexe, titre, documents.date",2);
+    // print_r($infoUpload);
 ?>
 
 <!DOCTYPE html>
@@ -106,24 +106,23 @@
                                 <th>Patient</th>
                                 <th>Documents</th>
                                 <th>Date d'envoi</th>
-                                <th></th>
+                                <th>Téléchargement</th>
                             </tr>
                         </thead>
                         <tbody> 
                             <?php $nominationPatient="";
-                            if ($infoPatient[$i]["sexe"]=="M") {
+                            for ($i=0;$i<count($infoUpload);$i++) { 
+                                if ($infoUpload[$i]["sexe"]=="M") {
                                     $nominationPatient="M.";
                                 }else{
                                     $nominationPatient="Mme.";
                                 }
-                                
-                                for ($i=0;$i<count($infoUpload);$i++) { 
-                                    echo "<tr>";
-                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
-                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
-                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
-                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
-                                    echo "</tr>";
+                                echo "<tr>";
+                                echo "<th>".$nominationPatient.$infoUpload[$i]["nom"]." ".$infoUpload[$i]["prenom"]."</th>";
+                                echo "<th>".$infoUpload[$i]["titre"]."</th>";
+                                echo "<th>".$infoUpload[$i]["date"]."</th>";
+                                echo "<th><btn>télécharger</btn></th>";
+                                echo "</tr>";
                                 }
                             ?>
 
@@ -155,6 +154,7 @@
     <script>
         $(document).ready( function () {
             $('#table_id').DataTable();
+            $('#table_id2').DataTable();
         } );
     </script>
 
