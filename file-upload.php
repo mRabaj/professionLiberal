@@ -1,6 +1,7 @@
 <?php 
-    // Include the database configuration file
+
 include 'db_object_patient.php';
+
 $statusMsg = '';
 $db=new DAO();
 // File upload path
@@ -36,16 +37,20 @@ if(isset($_POST["submit"]) && !empty($_FILES["fileUpload"]["name"])){
                 window.location.replace("patient_home.php");</script>';
 
             }else{
-                $statusMsg = "File upload failed, please try again.";
+                echo '<script>window.alert("Envoi de fichier échouer, ressayer dans quelques instants");
+                window.location.replace("patient_home.php");</script>';
             } 
         }else{
-            $statusMsg = "Sorry, there was an error uploading your file.";
+            echo '<script>window.alert("Une erreur est survenue lors de l'.'envois du fichier");
+            window.location.replace("patient_home.php");</script>';
         }
     }else{
-        $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+        echo '<script>window.alert("Seulements des fichiers JPG, JPEG, PNG et PDF peuve t'.'être envoiller");
+        window.location.replace("patient_home.php");</script>';
     }
 }else{
-    $statusMsg = 'Please select a file to upload.';
+    echo '<script>window.alert("Veuillez choisir un fichier à envoyer");
+    window.location.replace("patient_home.php");</script>';
 }
 
 // Display status message

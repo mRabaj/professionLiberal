@@ -5,7 +5,7 @@
     if ($dao->getERROR()) {
         print "erreur: ".$dao->getError();
     }
-    $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticien,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
+    $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticienN,praticien.prenom as praticienP,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
     // print_r($item);
     $doc=$dao->getDocuments();
 ?>
@@ -80,7 +80,7 @@
                     <hr>
                     <br>
                     <br><?= $item[0]["numero_securite_sociale"]?><br>
-                    <br><?= $item[0]["praticien"]?><br>
+                    <br><?= $item[0]["praticienN"]." ".$item[0]["praticienP"]?><br>
                     <br><?= $item[0]["mutuelle"]?><br>
                     <br>
                 </div>
@@ -105,12 +105,12 @@
                             <img src="..." class="figure-img img-fluid rounded" id="imgPlaceholder" alt="">
                         </div>
                     </div>
-
-                    <div class="custom-file">
+                    <span id="texte_fichier_uniquement">Uniquement des fichier jpg, png, jpeg et pdf</span>
+                    <div class="custom-file" id="div_file_upload">
                         <input type="file" name="fileUpload" class="custom-file-input" id="chooseFile">
                         <label class="custom-file-label" for="chooseFile" id="choisirFichier">Choisir le fichier</label>
                     </div>
-
+                    
                     <button type="submit" name="submit" class="btn btn-primary btn-block mt-4">
                         envoie
                     </button>
