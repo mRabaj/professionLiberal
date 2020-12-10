@@ -13,66 +13,97 @@ catch(Exception $e)
         $BddByCountry=$bdd->query('SELECT id_pays,libelle_pays from t_pays ORDER BY libelle_pays ASC');
    
 
-
-require_once("functions/functions.php");
+require_once("function/functions.php");
 require_once("class/dao.php"); 
 
   $find=false;
 $message="";
 if (isset($_POST['register']))
-{ 
+{       
+
       if ($_POST['pwd']==$_POST['rpwd'])
-      {   
-       foreach($dao->getPatient() as $item){
-           if ($item['email']==strtolower($_POST['mail']))
-           {
-              $find=true;
-              $message="Il y a déjà un compte enregistrer avec cette adresse mail !<br> Veuillez-vous connecter !.";
-           }
-       }
+        {   
+            if (isset($_GET["patient"])&&$_GET["patient"]==2) {
+                    foreach($dao->getPatient() as $item){
+                        if ($item['email']==strtolower($_POST['mail']))
+                            {
+                                $find=true;
+                                $message="Il y a déjà un compte enregistrer avec cette adresse mail !<br> Veuillez-vous connecter !.";
+                            }
+                    }
+                }
+            
+            if (isset($_GET["praticien"])&&$_GET["praticien"]==2) {
+                    foreach($dao->getPractitioner() as $item){
+                        if ($item['email']==strtolower($_POST['mail']))
+                            {
+                                $find=true;
+                                $message="Il y a déjà un compte enregistrer avec cette adresse mail !<br> Veuillez-vous connecter !.";
+                            }
+                    }
+                }
 
-      if (!$find) {
-        $nom=ucwords($_POST['lastName']);
-        $prenom=ucwords(strtolower($_POST['firstName']));
-        $sexe=$_POST['sexe'];
-        $nom_naissance=ucwords(strtolower($_POST['nom-naissance']));
-        $date_naissance=$_POST['date-de-naissance'];
-        $portable=$_POST['numero-de-telephone-portable'];
-        $fixe=$_POST['numero-de-telephone-fixe'];
-        $email=strtolower($_POST['mail']);
-        $adresse1=ucwords(strtolower($_POST['adresse-1']));
-        $adresse2=ucwords(strtolower($_POST['adresse-2']));
-        $code_postal=$_POST['code-postal'];
-        $ville=ucwords(strtolower($_POST['ville']));
-        $pays=$_POST['country'];
+            if (!$find) {
+                        $nom=ucwords($_POST['lastName']);
+                        $prenom=ucwords(strtolower($_POST['firstName']));
+                        $sexe=$_POST['sexe'];
+                        $nom_naissance=ucwords(strtolower($_POST['nom-naissance']));
+                        $date_naissance=$_POST['date-de-naissance'];
+                        $portable=$_POST['numero-de-telephone-portable'];
+                        $fixe=$_POST['numero-de-telephone-fixe'];
+                        $email=strtolower($_POST['mail']);
+                        $adresse1=ucwords(strtolower($_POST['adresse-1']));
+                        $adresse2=ucwords(strtolower($_POST['adresse-2']));
+                        $code_postal=$_POST['code-postal'];
+                        $ville=ucwords(strtolower($_POST['ville']));
+                        $pays=$_POST['country'];
 
-        $message="";        
-        $verif=valideNir($_POST['numero-securite-sociale']);
-        if ($verif==true) {
-            $numero_sociale=$_POST['numero-securite-sociale'];
-        } else {
-            $message="Veuillez saisir un muméro de sécurité sociale valide";
-        }
+                        $message="";        
+                        $verif=valideNir($_POST['numero-securite-sociale']);
+                        if ($verif==true) {
+                            $numero_sociale=$_POST['numero-securite-sociale'];
+                        } else {
+                            $message="Veuillez saisir un muméro de sécurité sociale valide";
+                        }
 
-        $mot_de_passe=password_hash($_POST["pwd"], PASSWORD_ARGON2I);
-        $mutual=$_POST['mutual'];
-        $praticien=$_POST['practitioner'];
+                        $mot_de_passe=password_hash($_POST["pwd"], PASSWORD_ARGON2I);
+                        $mutual=$_POST['mutual'];
+                        $praticien=$_POST['practitioner'];
+                        $code_rpps=$_POST['rpps'];
 
-        $dao->insertPatient($nom,$prenom,$sexe,$nom_naissance,$date_naissance,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$numero_sociale,$mot_de_passe,$mutual,$praticien);
-        if ($dao->getError()) {
-            print $dao->getError();
-        }
-        $send=sendMail($_POST['mail'],$_POST["firstName"]." ".$_POST["lastName"],"Confirmation d'inscription",file_get_contents("mail-register.html"));
+                        if (isset($_GET["patient"])&&$_GET["patient"]==2) {
 
-       
-       if ($send===true) {
-        /* redirection vers la page d'identification si inscription réussie */
-        header("Location:connexion.php?register=ok");
-        } else {
-            $error=$send;
-        }
-            }
-            }else {
+                                $dao->insertPatient($nom,$prenom,$sexe,$nom_naissance,$date_naissance,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$numero_sociale,$mot_de_passe,$mutual,$praticien);
+                                if ($dao->getError()) {
+                                    print $dao->getError();
+                                }
+
+                                $send=sendMail($_POST['mail'],$_POST["firstName"]." ".$_POST["lastName"],"Confirmation d'inscription",str_replace("##token##","patient=1",file_get_contents("mail-register.html")));
+                                if ($send===true) {
+                                /* redirection vers la page d'identification si inscription réussie */
+                                header("Location:connexion.php?register=ok&patient=1");
+                                } else {
+                                    $error=$send;
+                                }
+                        }
+
+                            if (isset($_GET["praticien"])&&$_GET["praticien"]==2) {
+
+                                $dao->insertPraticien($nom,$prenom,$sexe,$portable,$fixe,$email,$adresse1,$adresse2,$code_postal,$ville,$pays,$mot_de_passe,$code_rpps);
+                                if ($dao->getError()) {
+                                    print $dao->getError();
+                                }
+                                $send=sendMail($_POST['mail'],$_POST["firstName"]." ".$_POST["lastName"],"Confirmation d'inscription",str_replace("##token##","praticien=1",file_get_contents("mail-register.html")));
+                                if ($send===true) {
+                                /* redirection vers la page d'identification si inscription réussie */
+                                header("Location:connexion.php?register=ok&praticien=1");
+                                } else {
+                                    $error=$send;
+                                }
+                            }
+                    
+                    }
+        }else {
             
             $error="Mail déjà enregistré. Vous pouvez vous connecter ou choisir une autre adresse mail !.";
             }
@@ -91,7 +122,7 @@ if (isset($_POST['register']))
     <link rel="stylesheet" href="css/style.css" type="text/css">
 	
 	<script type="text/javascript">
-		function checkMail(){
+		function checkMailPatient(){
 		var xhttp = new XMLHttpRequest();
 			//on lui affecte une fonction quand HTTPREQUEST reçoit des informations
 				xhttp.onreadystatechange = function() {
@@ -101,14 +132,35 @@ if (isset($_POST['register']))
                         var obj=JSON.parse(xhttp.responseText);
 						for (var i=0;i<obj.length;i++) {								
 							if (obj[i].email==document.getElementById('email').value){
-                                console.log(obj[i].email);
-							alert("Il y a déjà un compte enregistrer avec cette adresse mail !<\n> Veuillez-vous connecter !.");
+                           
+							    alert("Il y a déjà un compte enregistrer avec cette adresse mail !<\n> Veuillez-vous connecter !.");
 							}
 						}
 						
 					}
 				}
 				xhttp.open("GET","checkMail.php", true);
+				xhttp.send();
+			
+        }
+        function checkPraticient(){
+		var xhttp = new XMLHttpRequest();
+			//on lui affecte une fonction quand HTTPREQUEST reçoit des informations
+				xhttp.onreadystatechange = function() {
+					//vérification que la requête HTTP est effectuée (readyState 4) et qu'elle s'est bien passée (status 200)
+					if (this.readyState == 4 && this.status == 200) {
+					// Typical action to be performed when the document is ready:
+                        var obj=JSON.parse(xhttp.responseText);
+						for (var i=0;i<obj.length;i++) {								
+							if (obj[i].email==document.getElementById('rpps').value){
+                           
+							   // alert("Il y a déjà un compte enregistrer avec cette adresse mail !<\n> Veuillez-vous connecter !.");
+							}
+						}
+						
+					}
+				}
+				xhttp.open("GET","checkPraticien.php", true);
 				xhttp.send();
 			
 		}
@@ -148,6 +200,7 @@ if (isset($_POST['register']))
                     <input type="text" name="firstName" id="firstName" value="<?php if (isset($_POST['firstName'])&& $_POST['firstName']){print $_POST['firstName']; }?>" required> 
                 </div>
 
+                <?php if (isset($_GET["patient"])&&$_GET["patient"]==2) { ?>
                 <div class="col-12">
                     <label for="nom-naissance"> Nom de naissance </label>
                     <input type="text" name="nom-naissance" id="nom-naissance" value="<?php if (isset($_POST['nom-naissance'])&& $_POST['nom-naissance']){print $_POST['nom-naissance'];} ?>" required> 
@@ -161,7 +214,18 @@ if (isset($_POST['register']))
                     <label for="birthdate">Date de naissance :</label>
                     <input type="date" name="date-de-naissance" class="form-control " id="birthdate" value="<?php if (isset($_POST['date-de-naissance'])&& $_POST['date-de-naissance']){print $_POST['date-de-naissance'];}?>" placeholder="" required>
                 </div>
-                <div class="col-6">
+
+                <?php } ?>
+
+                <?php if (isset($_GET["praticien"])&&$_GET["praticien"]==2) { ?>
+                    <div class="col-6">
+                    <label for="rpps">Votre Code RPPS :
+                    <input type="number"  name="rpps" class="form-control " id="rpps"  required>
+                    </label> 
+                    </div>
+               <?php } ?>
+
+                <div class="col-12">
                 <label for="port">Téléphone portable :
                 <input type="tel" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$"  name="numero-de-telephone-portable" class="form-control " id="port" value="<?php if (isset($_POST['numero-de-telephone-portable'])&& $_POST['numero-de-telephone-portable']){print $_POST['numero-de-telephone-portable'];}?>" placeholder="exemple : 0600000000"  required>
                </label> 
@@ -172,9 +236,10 @@ if (isset($_POST['register']))
                 </div>
                 <div class="col-12">
                     <label for="email">Adresse email </label>
-                    <input type="email" name="mail" id="email" onChange="checkMail()" value="<?php if (isset($_POST['mail'])&& $_POST['mail']){print $_POST['mail'];}  ?>" > 
+                    <input type="email" name="mail" id="email" onChange="checkMailPatient()" value="<?php if (isset($_POST['mail'])&& $_POST['mail']){print $_POST['mail'];}  ?>" > 
                 </div>
-
+                
+                    
                 <div class="col-12">
                 <label for="adresse1">Adresse 1 :</label>                    
                 <input type="text" name="adresse-1" class="form-control " id="adresse1" value="<?php if (isset($_POST['adresse-1'])&& $_POST['adresse-1']){print $_POST['adresse-1'];}?>" placeholder=""  >      
@@ -206,7 +271,10 @@ if (isset($_POST['register']))
 				}
 				$BddByCountry->closeCursor();
 				?>
-			    </select>      
+			    </select>
+
+                <?php if (isset($_GET["patient"])&&$_GET["patient"]==2) { ?>
+
                 <label for="mutual" >Mutuelle :</label>
                 <select name="mutual" id="mutual" class="col-12" >
                 <option value="NULL">Pas de mutuelle</option>
@@ -217,20 +285,23 @@ if (isset($_POST['register']))
                    <?php
                    } 
                 ?>
-
+                    
                 </select>
+
                 <label for="practitioner" >Votre praticien :</label>
                 <select name="practitioner" id="practitioner" class="col-12" >
                 <option value="NULL">Pas encore de praticien</option>
                 <?php 
-                   foreach($dao->getNamePractitioner() as $item){
+                   foreach($dao->getPractitioner() as $item){
                     ?>
-                    <option value="<?= $item["idPraticien"] ?>"><?= $item["nom"]." ".$item["prenom"]  ?></option>
+                    <option value="<?= $item['id'] ?>"><?= $item["nom"]." ".$item["prenom"]  ?></option>
                    <?php
                    } 
                 ?>
-
                 </select>
+
+                 <?php } ?> 
+
                 <div class="col-6">
                     <label for="pwd"> Mot de passe </label>
                     <input type="password" name="pwd" id="pwd" minlength="" > 
@@ -240,7 +311,7 @@ if (isset($_POST['register']))
                     <label for="rpwd">Confirmer le mot de passe</label>
                     <input type="password" name="rpwd" id="rpwd" minlength="" onChange="checkPwd()" > 
                 </div>
-
+                
 
         </section>
 
@@ -248,13 +319,17 @@ if (isset($_POST['register']))
             <div class="col-12">
                 <input class="btn btn-primary" type="submit" value="Valider"  name="register">
             </div>  
-          </div>       
-     </form>
- 
-                
-                <button type="button" class="btn btn-info"><a href="connexion.php">Se connecter</a></button>
-     
+          </div> 
+             </form>  
 
+             <?php if (isset($_GET["patient"])&&$_GET["patient"]==2) { ?>
+                <button type="button" class="btn btn-info"><a href="connexion.php?patient=1">Se connecter</a></button>
+            <?php } ?>
+
+            <?php if (isset($_GET["praticien"])&&$_GET["praticien"]==2) { ?>
+                <button type="button" class="btn btn-info"><a href="connexion.php?praticien=1">Se connecter</a></button>
+            <?php } ?>
+ 
  
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>

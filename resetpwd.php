@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	
-	require_once("functions/functions.php");
+	require_once("function/functions.php");
 	require_once("class/dao.php"); 
 
 	$error="";
@@ -13,15 +13,27 @@
 			/* mot de passe et confirmation de mot de passe équivalent sinon message d'erreur */
 			if ($_POST["pwd"]==$_POST["rpwd"]) {
 				
+				if (isset($_GET["patient"])&&$_GET["patient"]==3) {
 						$idPatient=$_GET["token"];
 						$mot_de_passe=password_hash($_POST["pwd"], PASSWORD_ARGON2I);
 						$dao->updatePwdPatient($mot_de_passe,$idPatient);
 						if ($dao->getError()) {
 							print $dao->getError();
 						}
+						/* redirection vers la page d'identification si modification de mot de passe réussie */
+				header("Location:connexion.php?resetpwd=ok&patient=1");
+					}
+					if (isset($_GET["praticien"])&&$_GET["praticien"]==3) { 
+						$idPraticien=$_GET["token"];
+						$mot_de_passe=password_hash($_POST["pwd"], PASSWORD_ARGON2I);
+						$dao->updatePwdPraticien($mot_de_passe,$idPraticien);
+						if ($dao->getError()) {
+							print $dao->getError();
+						}
+						/* redirection vers la page d'identification si modification de mot de passe réussie */
+				header("Location:connexion.php?resetpwd=ok&praticien=1");
+					}
 				
-				/* redirection vers la page d'identification si modification de mot de passe réussie */
-				//header("Location:connexion.php?resetpwd=ok");
 			} else {
 				$error="Les mots de passe saisis ne sont pas identiques";	
 			}

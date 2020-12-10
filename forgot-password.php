@@ -1,16 +1,17 @@
 <?php
 	
-  require_once("functions/functions.php");
+  require_once("function/functions.php");
   require_once("class/dao.php"); 
 	
 
 	$error="";
 	$send=false;
 	if ($_POST) {
+    if (isset($_GET["patient"])&&$_GET["patient"]==3) {
     $data=verifyAccountMail($dao->getPatient(),$_POST["mail"]);
-		if ($data) {
+    if ($data) {
 			//envoi du mail 
-            $send=sendMail($data['email'],$data['prenom']." ".$data['nom'],"Réinitialisation du mot de passe",str_replace("###token###",$data['iPatient'],file_get_contents("mail-forgot.html")));
+            $send=sendMail($data['email'],$data['prenom']." ".$data['nom'],"Réinitialisation du mot de passe",str_replace("###token###",$data['id']."&patient=3",file_get_contents("mail-forgot.html")));
 
 			if ($send===true) {
 				
@@ -18,6 +19,21 @@
 				$error=$send;
 			}
 		}
+    }
+    if (isset($_GET["praticien"])&&$_GET["praticien"]==3) { 
+      $data=verifyAccountMail($dao->getPractitioner(),$_POST["mail"]);
+      if ($data) {
+        //envoi du mail 
+              $send=sendMail($data['email'],$data['prenom']." ".$data['nom'],"Réinitialisation du mot de passe",str_replace("###token###",$data['id']."&praticien=3",file_get_contents("mail-forgot.html")));
+  
+        if ($send===true) {
+          
+        } else {
+          $error=$send;
+        }
+      }
+    }
+		
 	}
 ?>
 

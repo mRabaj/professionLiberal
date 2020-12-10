@@ -41,13 +41,16 @@ require 'vendor/autoload.php';
 	
 	function verifyAccount($datas,$login,$pwd) {
 		$valid=false;
+				var_dump($datas);
 		foreach($datas as $value) {
+	
 			if ($login==$value['email']) {
-				if (password_verify($pwd,$value['pwd'])) {
-					
+				if (password_verify($pwd,$value['pwd'])) {	
 					$valid=md5($value['prenom']."-".$value['nom']."-".$value['email']);
-					$_SESSION['patient']=$value['idPatient']; 
-					print $_SESSION['patient'];
+					$_SESSION['user']=$value['id']; 
+				}
+				else{
+					print "mauvais mot de passe !";
 				}
 			}
 		}
