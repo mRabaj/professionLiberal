@@ -16,7 +16,7 @@ $handle = @fopen($_FILES['fileUpload']['tmp_name'], "r");
 if ($handle) {     
     while (!feof($handle)) {         
         $hex = bin2hex(fread ($handle , 4 ));         
-        $file_hex.= $hex."\n";     
+        $file_hex.= $hex; //."\n" pour ajouter un saut de ligne    
     }     
     fclose($handle);  
 } 

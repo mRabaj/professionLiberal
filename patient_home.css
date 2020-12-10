@@ -114,3 +114,9 @@ a:active {
 #div_file_upload {
     margin-top: 10px;
 }
+
+#img_historique {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}

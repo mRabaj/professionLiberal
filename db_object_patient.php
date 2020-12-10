@@ -64,8 +64,8 @@
 			return $this->executeNonQuery($sql);
         }
 
-        public function getDocuments() { 
-            $sql="SELECT documents.titre as titre,documents.date as dateE FROM documents LEFT JOIN patient ON (documents.idPatient=patient.idPatient) WHERE patient.idPatient=1";
+        public function getDocuments($id="") { 
+            $sql="SELECT documents.titre as titre, documents.date as dateE, documents.file_blob as hex, documents.extension as extension FROM documents LEFT JOIN patient ON (documents.idPatient=patient.idPatient) WHERE patient.idPatient=".$id ;
 			return $this->executeQuery($sql);
         }
 

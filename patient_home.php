@@ -7,7 +7,7 @@
     }
     $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticienN,praticien.prenom as praticienP,praticien.sexe as praticienS,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
     // print_r($item);
-    $doc=$dao->getDocuments();
+    $doc=$dao->getDocuments(1);
 ?>
 
 <!DOCTYPE html>
@@ -134,7 +134,7 @@
                         </thead>
                         <tbody>
                             <?php for ($i=0;$i<count($doc) ;$i++) { 
-                                echo "<tr>"; 
+                                echo '<tr value='.$doc[$i]["hex"].'>'; 
                                 echo "<th>".$doc[$i]["titre"]."</th>";
                                 echo "<th>".date("d/m/Y h:i", strtotime($doc[$i]["dateE"]))."</th>";  //hh:mm
                                 echo "</tr>";
@@ -142,6 +142,7 @@
                         </tbody>
                     </table>
                 </div>
+                <img id="img_historique" src="">
 
             </div>
             test
@@ -160,6 +161,18 @@
 <script>
     $(document).ready( function () {
         $('#table_id').DataTable();
+
+        $('#table_id tbody').on('mouseover', 'tr', function () {
+            
+            var hex_data=$(this).attr('value');
+            // var src_image=hex_data.replace(/(.{6})(?=.)/g,"$1 "); //\n
+            console.log(hex_data);
+
+            $('#img_historique').attr('src', 'data:image/png;base64,'+hex_data);
+
+            // <img src="data:image/png;base64," alt="Red dot" />
+
+        });
     });
 
     function readURL(input) {
