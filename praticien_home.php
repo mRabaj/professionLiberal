@@ -8,7 +8,7 @@
     // print_r($item);
     $infoPatient=$dao->getInfoPatient("patient.sexe, patient.nom, prenom, date_naissance, telephone_portable, telephone_fixe, patient.email, adresse1, adresse2, patient.code_postal, patient.ville, pays, numero_securite_sociale, mutuelle.nom as mutuelle",2);
     // print_r($infoPatient);
-    $infoUpload=$dao->getInfoUpload("patient.nom, patient.prenom, patient.sexe, titre, documents.date",2);
+    $infoUpload=$dao->getInfoUpload("patient.nom, patient.prenom, patient.sexe, titre, documents.date, file_blob as file, extension",2);
     // print_r($infoUpload);
 ?>
 
@@ -117,7 +117,7 @@
                                 }else{
                                     $nominationPatient="Mme.";
                                 }
-                                echo "<tr>";
+                                echo '<tr value='.$infoUpload[$i]["file"].' value2='.$infoUpload[$i]["extension"].'>';
                                 echo "<th>".$nominationPatient.$infoUpload[$i]["nom"]." ".$infoUpload[$i]["prenom"]."</th>";
                                 echo "<th>".$infoUpload[$i]["titre"]."</th>";
                                 echo "<th>".$infoUpload[$i]["date"]."</th>";
@@ -130,6 +130,7 @@
                     </table>
 
                 </div>
+                <img id="img_historique" src="">
             </div>
 
             <div class="tab-pane" id="3a">
@@ -155,7 +156,23 @@
         $(document).ready( function () {
             $('#table_id').DataTable();
             $('#table_id2').DataTable();
+            $('#img_historique').hide();
+
+            $('#table_id2 tbody').on('mouseover', 'tr', function () {
+                var hex_data=$(this).attr('value');
+
+                extencion=$(this).attr('value2');
+
+                $('#img_historique').attr('src', 'data:image/'+extencion+';base64,'+hex_data);
+                $('#img_historique').show();
+            });
+
+            $( "#table_id2 tbody" ).mouseleave(function() {
+                $('#img_historique').hide();
+            });
+
         } );
+
     </script>
 
 </body>

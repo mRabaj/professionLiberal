@@ -85,3 +85,12 @@ a:active {
     padding-top: 20px;
     margin-bottom: 20px;
 }
+
+#img_historique {
+    z-index: 100;
+    position: fixed;
+    margin-top: -260px;
+    margin-left: 850px;
+    width: 280px;
+    height: 280px;
+}
