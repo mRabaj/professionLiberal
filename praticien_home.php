@@ -8,7 +8,8 @@
     // print_r($item);
     $infoPatient=$dao->getInfoPatient("patient.sexe, patient.nom, prenom, date_naissance, telephone_portable, telephone_fixe, patient.email, adresse1, adresse2, patient.code_postal, patient.ville, pays, numero_securite_sociale, mutuelle.nom as mutuelle",2);
     // print_r($infoPatient);
-    // print count($infoPatient);
+    $infoUpload=$dao->getInfoUpload("patient.nom, patient.prenom, patient.sexe,titre, documents.date",2);
+    print_r($infoUpload);
 ?>
 
 <!DOCTYPE html>
@@ -29,15 +30,18 @@
         $nomination="Mme. ";
     }
     ?>
-    <div class="container"><h3><?=$nomination.$item[0]["nom"].$item[0]["prenom"]?></h3></div>
+    <div class="container"><h3><?=$nomination.$item[0]["nom"]." ".$item[0]["prenom"]?></h3></div>
     <div id="exTab1" class="container">	
         <ul class="nav nav-pills">
             <li class="active"><a  href="#1a" data-toggle="tab">Liste des patients</a>
             </li>
-            <li><a href="#2a" data-toggle="tab">Nouveau patient</a>
+            <li><a href="#2a" data-toggle="tab">Documents envoyés</a>
             </li>
-            <li><a href="#3a" data-toggle="tab">Emplois du temps</a>
+            <li><a href="#3a" data-toggle="tab">Nouveau patient</a>
             </li>
+            <li><a href="#4a" data-toggle="tab">Emplois du temps</a>
+            </li>
+            
         </ul>
         <div class="tab-content clearfix">
             <div class="tab-pane active" id="1a">
@@ -59,7 +63,7 @@
                                 <th>mutuelle</th>
                             </tr>
                         </thead>
-                        <!-- creer array avec tout les info au bon format, puis aller chercher via for + $i -->
+
                         <tbody> 
                             <?php 
                                 $nominationPatient="";
@@ -86,7 +90,6 @@
                                 }
                             ?>
                         </tbody>
-
                     </table>
                 
                 </div>
@@ -94,16 +97,52 @@
             </div>
 
             <div class="tab-pane" id="2a">
+                <h7>ca va</h7>
+                <div class="white_background_conteneur">
+
+                    <table id="table_id2" class="display">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Documents</th>
+                                <th>Date d'envoi</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            <?php $nominationPatient="";
+                            if ($infoPatient[$i]["sexe"]=="M") {
+                                    $nominationPatient="M.";
+                                }else{
+                                    $nominationPatient="Mme.";
+                                }
+                                
+                                for ($i=0;$i<count($infoUpload);$i++) { 
+                                    echo "<tr>";
+                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
+                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
+                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
+                                    echo "<th>".$nominationPatient.$infoPatient[$i]["nom"]." ".$infoPatient[$i]["prenom"]."</th>";
+                                    echo "</tr>";
+                                }
+                            ?>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="tab-pane" id="3a">
                 <h7>ca va ?</h7>
                 <div class="white_background_conteneur">
                 </div>
             </div>
 
-            <div class="tab-pane" id="3a">
+            <div class="tab-pane" id="4a">
                 <h7>grave</h7>
                 <div class="white_background_conteneur">
                 </div>
-                test
             </div>
 
         </div>

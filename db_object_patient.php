@@ -44,6 +44,11 @@
             // print $sql;
             return $this->executeQuery($sql);
         }
+
+        public function getInfoUpload($select="",$id=""){
+            $sql="SELECT ".$select." FROM documents LEFT JOIN patient ON (patient.idPatient=documents.idPatient) LEFT JOIN praticien ON (praticien.idPraticien=patient.idPraticien) WHERE praticien.idPraticien=".$id;
+            return $this->executeQuery($sql);
+        }
     }    
 
     // $dao= new DAO();
