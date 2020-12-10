@@ -57,8 +57,9 @@
             return $this->executeQuery($sql);
         }
 
-        public function insertdocuments($name,$documents) { 
-            $sql="INSERT INTO documents VALUES ('',1,'".$name."',NOW(),'','".$documents."')";
+        public function insertdocuments($name,$documents) {    
+            $extension = substr($name, strpos($name, "."));    
+            $sql="INSERT INTO documents VALUES ('',1,'".$name."',NOW(),'','".$documents."','".$extension."')";
             // print $sql;
 			return $this->executeNonQuery($sql);
         }
