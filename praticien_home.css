@@ -4,7 +4,7 @@ body {
 
 li {
     padding-left: 2%;
-    padding-right: 8%;
+    padding-right: 6%;
     padding-top: 10px;
     padding-bottom: 10px;
     border-top-left-radius:10px;
@@ -79,4 +79,18 @@ a:active {
 }
 .exTab1 {
     overflow: clip;
+}
+
+#table_id{
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+#img_historique {
+    z-index: 100;
+    position: fixed;
+    margin-top: -260px;
+    margin-left: 850px;
+    width: 280px;
+    height: 280px;
 }
