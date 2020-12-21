@@ -1,6 +1,6 @@
 <?php 
-
-include 'db_object_patient.php';
+session_start();
+include 'class/dao.php';
 
 $statusMsg = '';
 $db=new DAO();
@@ -26,7 +26,7 @@ if(isset($_POST["submit"]) && !empty($_FILES["fileUpload"]["name"])){
         if(move_uploaded_file($_FILES["fileUpload"]["tmp_name"], $targetFilePath)){
             // Insert image file name into database
             
-            $insert = $db->insertdocuments($fileName,$file_base64);
+            $insert = $db->insertdocuments($fileName,$file_base64,$_SESSION["id"]);
             if($insert){
                 unlink("uploads/".$fileName); // delete le fichier
                 // $statusMsg = "The file ".$fileName." has been uploaded successfully.";

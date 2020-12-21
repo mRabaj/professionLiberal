@@ -1,13 +1,30 @@
 <?php
-    require_once("db_object_patient.php");
+session_start();
 
-    $dao= new DAO();
-    if ($dao->getERROR()) {
-        print "erreur: ".$dao->getError();
-    }
-    $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.nom as praticienN,praticien.prenom as praticienP,praticien.sexe as praticienS,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",1);   
+if (!isset($_SESSION["id"]))  {
+	header("Location:connexion.php");
+} else {
+    require_once("class/dao.php");
+    require_once("function/functions.php");
+
+  
+    $item=$dao->getNomPrenom("mutuelle.nom as mutuelle,praticien.email as emailPraticien,praticien.nom as praticienN,praticien.prenom as praticienP,praticien.sexe as praticienS,patient.nom,patient.prenom,patient.sexe,patient.nom_naissance,patient.date_naissance,patient.telephone_portable,patient.telephone_fixe,patient.email,patient.adresse1,patient.adresse2,patient.code_postal,patient.ville,patient.pays,patient.numero_securite_sociale",$_SESSION["id"]);   
     // print_r($item);
-    $doc=$dao->getDocuments(1);
+    $doc=$dao->getDocuments($_SESSION["id"]);
+
+    if(isset($_POST['contact'])) {
+ 
+            $send=sendMail($item[0]['emailPraticien'],$item[0]["nom"]." ".$item[0]["prenom"],$_POST["sujet"],$_POST['message']);
+            if ($send===true) {
+                print '<script>window.alert("Le message a été envoyé avec succés.");
+                </script>';
+            }
+            else{
+                print '<script>window.alert("Le message n\'a pas été envoyé.");
+                </script>';
+            }
+        }
+    
 ?>
 
 <!DOCTYPE html>
@@ -15,13 +32,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="patient_home.css">
+    
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <title>Home patient</title>
+    <link href='https://cdn.jsdelivr.net/combine/npm/fullcalendar-scheduler@5.4.0/main.min.css,npm/fullcalendar-scheduler@5.4.0/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="css/patient_home.css">
+
+          <script src='https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.4.0,npm/fullcalendar-scheduler@5.4.0,npm/fullcalendar-scheduler@5.4.0/locales-all.min.js,npm/fullcalendar-scheduler@5.4.0/locales-all.min.js,npm/fullcalendar-scheduler@5.4.0/main.min.js'></script>
+          <link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet' />
+          <link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
+    <title>Profession libérale</title>
+    <script type="text/javascript">
+          document.addEventListener('DOMContentLoaded', function() {           
+                        var calendarEl = document.getElementById('calendar');
+                        var calendar = new FullCalendar.Calendar(calendarEl, {    
+                          initialView: 'timeGridWeek',
+                          locale:'fr',
+                          hiddenDays: [ 0 ],
+                          slotDuration: '00:20:00',
+                          slotMinTime: '8:00', 
+                          slotMaxTime: '18:00',
+                          // String, default: 'standard'
+                          selectable:true,
+                          editable:true,
+                          themeSystem: 'bootstrap',
+                          buttonText:{
+                            today:'aujourd\'hui'                       
+                          },                              
+                          headerToolbar: {
+                          left: 'prev next',
+                          center: 'title',
+                          right: 'today'
+                          },
+                  });
+                  
+                  calendar.render(); 
+                });
+              </script>
 </head>
 <body>
-
+<header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.php">Accueil</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">   
+        <li class="nav-item">
+          <a class="nav-link" href="index.php?disconnect=true"  tabindex="-1" >Déconnexion </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+</header>
+<br>
 <div class="container"><h3><?= $item[0]["sexe"]?>. <?= $item[0]["nom"]?> <?= $item[0]["prenom"]?></h3></div>
 <div id="exTab1" class="container">	
     <ul class="nav nav-pills">
@@ -30,6 +97,8 @@
         <li><a href="#2a" data-toggle="tab">Prendre rendez-vous</a>
         </li>
         <li><a href="#3a" data-toggle="tab">Envoi de document</a>
+        </li>
+        <li><a href="#4a" data-toggle="tab">Contact</a>
         </li>
     </ul>
     <div class="tab-content clearfix">
@@ -91,14 +160,20 @@
                     <br>
                 </div>
             </div>
-            test
 
         </div>
+
+    <!-- prendre rendez-vous  -->
+
         <div class="tab-pane" id="2a">
             <h7>grave</h7>
-            <div class="white_background_conteneur">
+            <div class="white_background_conteneur" style="width:auto;height:1020px;">
+            <div id='calendar' style="width:100%;heighth:100%;"></div>  
             </div>
         </div>
+    
+    <!-- envoi de document -->
+
         <div class="tab-pane" id="3a">
             <h7>grave</h7>
             <div class="white_background_conteneur">
@@ -108,7 +183,7 @@
 
                     <div class="user-image mb-3 text-center">
                         <div style="width: 100px; height: 100px; overflow: hidden; background: #cccccc; margin: 0 auto">
-                            <img src="..." class="figure-img img-fluid rounded" id="imgPlaceholder" alt="">
+                            <img src="" class="figure-img img-fluid rounded" id="imgPlaceholder" alt="">
                         </div>
                     </div>
                     <span id="texte_fichier_uniquement">Uniquement des fichier jpg, png et jpeg</span>
@@ -136,19 +211,42 @@
                             <?php for ($i=0;$i<count($doc) ;$i++) { 
                                 echo '<tr value='.$doc[$i]["hex"].' value2='.$doc[$i]["extension"].'>'; 
                                 echo "<th>".$doc[$i]["titre"]."</th>";
-                                echo "<th>".date("d/m/Y h:i", strtotime($doc[$i]["dateE"]))."</th>";  //hh:mm
+                                echo "<th>".date("d/m/Y H:i", strtotime($doc[$i]["dateE"]))."</th>";  
                                 echo "</tr>";
                             }?>
                         </tbody>
                     </table>
                 </div>
-                <img id="img_historique" src="">
+                <img id="img_historique" src="" alt="">
 
             </div>
-            test
         </div>
-    </div>
+
+
+    <!-- Contact -->
+
+                    <div class="tab-pane" id="4a">
+                            <h7>grave</h7>
+                            <div class="white_background_conteneur">
+                                <form method="post" class="was-validated" novalidate >
+
+                                    <div class="input-group flex-nowrap">                        
+                                    <input value="" type="text" name="sujet" class="form-control" placeholder="Sujet" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label">Votre message</label>
+                                    <textarea value="" name="message" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <button class="btn btn-primary" name="contact" type="submit">Envoyer</button>
+                                    </div>
+                                    </form>
+                            </div>
+                    </div>
+        </div>
 </div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -194,6 +292,6 @@
         readURL(this);
     });
 </script>
-
+<?php } ?>
 </body>
 </html>
